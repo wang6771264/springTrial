@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-4.3.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+    <context:property-placeholder location="classpath:*.properties" order="1" file-encoding="utf-8"/>
+    <bean id="injectPojo" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <!-- <entry key="1" value-ref=""/>
+                <entry key="${db.mysql.user}" value-ref=""/> -->
+            </map>
+        </constructor-arg>
+    </bean>
+	<!--[redis-JedisPoolConfig配置] -->
+	<!-- jedis-2.7.2.jar 依赖jar包 commons-pool2-2.3.jar jedis基于 commons-pool2-2.3.jar -->
+	<import resource="classpath:spring-redis.xml"/>
+</beans>
