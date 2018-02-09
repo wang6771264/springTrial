@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration packages="com.lcb.soa.misc.common.log" shutdownHook="disable">
+
+	<Properties>
+		<Property name="gelf.host">${filter.log4j.gelf.host}</Property>
+		<Property name="gelf.port">${filter.log4j.gelf.port}</Property>
+		<Property name="logfile.path">${filter.log4j.dir}/${filter.runtime.server}</Property>
+		<Property name="logfile.arch.path">${filter.log4j.dir}/${filter.runtime.server}/${date:yyyy-MM}</Property>
+		<Property name="logfile.arch.suffix">%d{yyyy-MM-dd}-%i.log.gz</Property>
+		<Property name="logfile.pattern">%d{HH:mm:ss.SSS} &lt;%c&gt; %5p [%t]: %m%n</Property>
+		<Property name="timestamp.pattern">%d{yyyy-MM-dd HH:mm:ss.SSS}{GMT+0}</Property>
+		<Property name="daologger.pattern">com\.lcb\.soa\..*\.dao\..+</Property>
+		
+		<Property name="sensors.host">${filter.log4j.sensors.host}</Property>
+		<Property name="sensors.topic">sensors-soa</Property>
+		<Property name="sensors.key">${project.artifactId}</Property>
+		
+	</Properties>
+
+	<Appenders>
+		<Console name="STDOUT" target="SYSTEM_OUT">
+			<PatternLayout pattern="${logfile.pattern}"/>
+		</Console>
+		<Console name="STDERR" target="SYSTEM_ERR">
+			<PatternLayout pattern="${logfile.pattern}"/>
+		</Console>
+		<RollingRandomAccessFile name="MONITOR_LOG_FILE" fileName="${logfile.path}/monitor.log"
+								 filePattern="${logfile.arch.path}/monitor-${logfile.arch.suffix}">
+			<PatternLayout pattern="${logfile.pattern}"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy />
+		</RollingRandomAccessFile>
+		<RollingRandomAccessFile name="SERVICE_LOG_FILE" fileName="${logfile.path}/service.log"
+								 filePattern="${logfile.arch.path}/service-${logfile.arch.suffix}">
+			<PatternLayout pattern="${logfile.pattern}"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy />
+		</RollingRandomAccessFile>
+		<RollingRandomAccessFile name="JOB_LOG_FILE" fileName="${logfile.path}/job.log"
+								 filePattern="${logfile.arch.path}/job-${logfile.arch.suffix}">
+			<PatternLayout pattern="${logfile.pattern}"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy />
+		</RollingRandomAccessFile>
+		<RollingRandomAccessFile name="LISTENER_LOG_FILE" fileName="${logfile.path}/listener.log"
+								 filePattern="${logfile.arch.path}/listener-${logfile.arch.suffix}">
+			<PatternLayout pattern="${logfile.pattern}"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy />
+		</RollingRandomAccessFile>
+		<Gelf name="GELF-MONITOR" facility="SOA-MONITOR" host="${gelf.host}" port="${gelf.port}" version="1.1" extractStackTrace="true"
+			  filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192" 
+			  originHost="%host{fqdn}">
+			<Field name="requestId" mdc="requestId" />
+			<Field name="logTime" pattern="${timestamp.pattern}" />
+			<Field name="severity" pattern="%p" />
+			<Field name="thread" pattern="%t" />
+			<Field name="loggerName" pattern="%c" />
+			<Field name="className" pattern="%C" />
+			<Field name="methodName" pattern="%C{1}.%M" />
+			<Field name="lineNumber" pattern="%L" />
+			<Field name="hostName" pattern="%host{simple}" />
+			<Field name="hostAddr" pattern="%host{address}" />
+			<Field name="logVersion" pattern="2.0" />
+			<DynamicMdcFields regex="mdc.*" />
+			<DynamicMdcFields regex="(mdc|MDC)fields" />
+		</Gelf>
+		<Gelf name="GELF-APM" facility="SOA-APM" host="${gelf.host}" port="${gelf.port}" version="1.1" extractStackTrace="true"
+              filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192" 
+              originHost="%host{fqdn}">
+            <Field name="logTime" pattern="${timestamp.pattern}" />
+            <Field name="severity" pattern="%p" />
+            <Field name="thread" pattern="%t" />
+            <Field name="loggerName" pattern="%c" />
+            <Field name="className" pattern="%C" />
+            <Field name="methodName" pattern="%C{1}.%M" />
+            <Field name="lineNumber" pattern="%L" />
+            <Field name="hostName" pattern="%host{simple}" />
+            <Field name="hostAddr" pattern="%host{address}" />
+        </Gelf>
+		<Gelf name="GELF-SERVICE" facility="SOA-SERVICE" host="${gelf.host}" port="${gelf.port}" version="1.1" extractStackTrace="true"
+			  filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192" 
+			  originHost="%host{fqdn}">
+			<Field name="requestId" mdc="requestId" />
+			<Field name="logTime" pattern="${timestamp.pattern}" />
+			<Field name="severity" pattern="%p" />
+			<Field name="thread" pattern="%t" />
+			<Field name="loggerName" pattern="%c" />
+			<Field name="className" pattern="%C" />
+			<Field name="methodName" pattern="%C{1}.%M" />
+			<Field name="lineNumber" pattern="%L" />
+			<Field name="hostName" pattern="%host{simple}" />
+			<Field name="hostAddr" pattern="%host{address}" />
+			<DynamicMdcFields regex="mdc.*" />
+			<DynamicMdcFields regex="(mdc|MDC)fields" />
+		</Gelf>
+		<Gelf name="GELF-JOB" facility="SOA-JOB" host="${gelf.host}" port="${gelf.port}" version="1.1" extractStackTrace="true"
+			  filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192" 
+			  originHost="%host{fqdn}">
+			<Field name="requestId" mdc="requestId" />
+			<Field name="logTime" pattern="${timestamp.pattern}" />
+			<Field name="severity" pattern="%p" />
+			<Field name="thread" pattern="%t" />
+			<Field name="loggerName" pattern="%c" />
+			<Field name="className" pattern="%C" />
+			<Field name="methodName" pattern="%C{1}.%M" />
+			<Field name="lineNumber" pattern="%L" />
+			<Field name="hostName" pattern="%host{simple}" />
+			<Field name="hostAddr" pattern="%host{address}" />
+			<DynamicMdcFields regex="mdc.*" />
+			<DynamicMdcFields regex="(mdc|MDC)fields" />
+		</Gelf>
+		<Gelf name="GELF-LISTENER" facility="SOA-LISTENER" host="${gelf.host}" port="${gelf.port}" version="1.1" extractStackTrace="true"
+			  filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192" 
+			  originHost="%host{fqdn}">
+			<Field name="requestId" mdc="requestId" />
+			<Field name="logTime" pattern="${timestamp.pattern}" />
+			<Field name="severity" pattern="%p" />
+			<Field name="thread" pattern="%t" />
+			<Field name="loggerName" pattern="%c" />
+			<Field name="className" pattern="%C" />
+			<Field name="methodName" pattern="%C{1}.%M" />
+			<Field name="lineNumber" pattern="%L" />
+			<Field name="hostName" pattern="%host{simple}" />
+			<Field name="hostAddr" pattern="%host{address}" />
+			<DynamicMdcFields regex="mdc.*" />
+			<DynamicMdcFields regex="(mdc|MDC)fields" />
+		</Gelf>
+		<Gelf name="GELF-OTHER" facility="SOA-OTHER" host="${gelf.host}" port="${gelf.port}" version="1.1" extractStackTrace="true"
+			  filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192" 
+			  originHost="%host{fqdn}">
+			<Field name="requestId" mdc="requestId" />
+			<Field name="logTime" pattern="${timestamp.pattern}" />
+			<Field name="severity" pattern="%p" />
+			<Field name="thread" pattern="%t" />
+			<Field name="loggerName" pattern="%c" />
+			<Field name="className" pattern="%C" />
+			<Field name="methodName" pattern="%C{1}.%M" />
+			<Field name="lineNumber" pattern="%L" />
+			<Field name="hostName" pattern="%host{simple}" />
+			<Field name="hostAddr" pattern="%host{address}" />
+			<DynamicMdcFields regex="mdc.*" />
+			<DynamicMdcFields regex="(mdc|MDC)fields" />
+		</Gelf>
+		
+        <Kafka name="SENSORS-MONITOR" topic="${sensors.topic}" key="${sensors.key}">
+			<PatternLayout pattern="%m" />  
+			<Property name="bootstrap.servers">${sensors.host}</Property>  
+			<Property name="retries">2</Property>  
+			<Property name="linger.ms">5</Property>  
+			<Property name="enable.auto.commit">true</Property>  
+			<Property name="auto.commit.interval.ms">5000</Property>  
+			<Property name="session.timeout.ms">10000</Property>  
+        </Kafka> 
+
+	</Appenders>
+	
+	<Loggers>
+		<!-- Root Logger -->
+		<Root level="INFO">
+			<AppenderRef ref="STDOUT"/>
+			<AppenderRef ref="SERVICE_LOG_FILE" />
+			<AppenderRef ref="JOB_LOG_FILE" />
+			<AppenderRef ref="LISTENER_LOG_FILE" />
+			<AppenderRef ref="GELF-OTHER" />
+		</Root>
+		<!-- LCB LMonitor Logger -->
+		<Logger name="LMonitor" level="DEBUG" additivity="false">
+			<AppenderRef ref="MONITOR_LOG_FILE" />
+			<AppenderRef ref="GELF-MONITOR" />
+			<AppenderRef ref="SENSORS-MONITOR" />
+		</Logger>
+        <!-- LCB APM Logger -->
+        <Logger name="APMLogger" level="DEBUG" additivity="false">
+            <AppenderRef ref="GELF-APM" />
+        </Logger>
+		<!-- LCB SOA DAO Logger -->
+		<Logger name="com.lcb.soa" level="DEBUG" additivity="false">
+			<LoggerNameFilter name="${daologger.pattern}" level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+			<AppenderRef ref="STDERR"/>
+			<AppenderRef ref="SERVICE_LOG_FILE" />
+			<AppenderRef ref="GELF-SERVICE" />
+		</Logger>
+		<!-- LCB JOB Logger -->
+		<Logger name="com.lcb.job" level="DEBUG" additivity="false">
+			<AppenderRef ref="STDERR"/>
+			<AppenderRef ref="JOB_LOG_FILE" />
+			<AppenderRef ref="GELF-JOB" />
+		</Logger>
+		<!-- LCB Listener Logger -->
+		<Logger name="com.lcb.listener" level="DEBUG" additivity="false">
+			<AppenderRef ref="STDERR"/>
+			<AppenderRef ref="LISTENER_LOG_FILE" />	
+			<AppenderRef ref="GELF-LISTENER" />
+		</Logger>
+		<!-- Quartz Logger -->
+		<Logger name="org.quartz" level="INFO" additivity="false">
+			<AppenderRef ref="STDERR" />		
+			<AppenderRef ref="JOB_LOG_FILE" />
+			<AppenderRef ref="GELF-JOB" />
+			<AppenderRef ref="GELF-OTHER" />
+		</Logger>
+		<!-- MyBatis Logger -->
+		<Logger name="org.apache.ibatis" level="WARN" additivity="false">
+			<AppenderRef ref="STDERR" />		
+			<AppenderRef ref="SERVICE_LOG_FILE" />
+			<AppenderRef ref="GELF-SERVICE" />
+			<AppenderRef ref="GELF-OTHER" />
+		</Logger>
+		<!-- JDBC Logger -->
+		<Logger name="java.sql" level="WARN" additivity="false">
+			<AppenderRef ref="STDERR" />		
+			<AppenderRef ref="SERVICE_LOG_FILE" />
+			<AppenderRef ref="GELF-SERVICE" />
+			<AppenderRef ref="GELF-OTHER" />
+		</Logger> 
+		<!-- Dubbo Logger -->
+		<Logger name="com.alibaba.dubbo" level="WARN" additivity="false">
+			<AppenderRef ref="STDERR" />		
+			<AppenderRef ref="SERVICE_LOG_FILE" />
+			<AppenderRef ref="JOB_LOG_FILE" />
+			<AppenderRef ref="LISTENER_LOG_FILE" />
+			<AppenderRef ref="GELF-OTHER" />
+		</Logger>
+		<!-- Kafka Logger -->
+		<Logger name="org.apache.kafka" level="WARN" additivity="false">
+			<AppenderRef ref="STDERR" />		
+			<AppenderRef ref="SERVICE_LOG_FILE" />
+			<AppenderRef ref="JOB_LOG_FILE" />
+			<AppenderRef ref="LISTENER_LOG_FILE" />
+			<AppenderRef ref="GELF-OTHER" />
+		</Logger>
+		<!-- SOA Push Logger -->
+		<Logger name="com.lcb.soa.push" level="INFO" additivity="false"> 
+			<AppenderRef ref="STDOUT"/>
+			<AppenderRef ref="SERVICE_LOG_FILE" />
+			<AppenderRef ref="GELF-SERVICE" />
+		</Logger>
+		<!-- SOA Captcha Logger -->
+		<Logger name="com.lcb.soa.captcha" level="${filter.captcha.loglevel}" additivity="false"> 
+			<AppenderRef ref="STDOUT"/>
+			<AppenderRef ref="SERVICE_LOG_FILE" />
+			<AppenderRef ref="GELF-SERVICE" />
+		</Logger>
+		
+		<!-- SOA UserSource Service Logger -->
+		<Logger name="com.lcb.soa.user" level="INFO" additivity="false">  
+			<AppenderRef ref="STDOUT"/>
+			<AppenderRef ref="SERVICE_LOG_FILE" />
+			<AppenderRef ref="GELF-SERVICE" />
+		</Logger> 
+		
+		<!-- SOA Violation Logger -->
+		<Logger name="com.lcb.soa.violation" level="INFO" additivity="false"> 
+			<AppenderRef ref="STDOUT"/>
+			<AppenderRef ref="SERVICE_LOG_FILE" />
+			<AppenderRef ref="GELF-SERVICE" />
+		</Logger>
+		
+		<!-- SOA pur Logger -->
+		<Logger name="com.lcb.soa.purorder" level="INFO" additivity="false"> 
+			<AppenderRef ref="STDOUT"/>
+			<AppenderRef ref="SERVICE_LOG_FILE" />
+			<AppenderRef ref="GELF-SERVICE" />
+		</Logger>
+		
+		<!-- SOA SA Logger -->
+		<!--
+		 <Logger name="com.lcb.soa.sa" level="INFO" additivity="false"> 
+			<AppenderRef ref="STDOUT"/>
+			<AppenderRef ref="SERVICE_LOG_FILE" />
+			<AppenderRef ref="GELF-SERVICE" />
+		</Logger> 
+		<Logger name="com.lcb.soa.order.dao" level="DEBUG" additivity="false"> 
+			<AppenderRef ref="STDOUT"/>
+			<AppenderRef ref="SERVICE_LOG_FILE" />
+			<AppenderRef ref="GELF-SERVICE" />
+		</Logger>
+		-->
+		<!-- SOA Order Logger -->
+		<!-- <Logger name="com.lcb.soa.order" level="INFO" additivity="false"> 
+			<AppenderRef ref="STDOUT"/>
+			<AppenderRef ref="SERVICE_LOG_FILE" />
+			<AppenderRef ref="GELF-SERVICE" />
+		</Logger> -->
+	<!-- 	<Logger name="com.lcb.soa.settlement.dao" level="DEBUG" additivity="false"> 
+			<AppenderRef ref="STDOUT"/>
+			<AppenderRef ref="SERVICE_LOG_FILE" />
+			<AppenderRef ref="GELF-SERVICE" />
+		</Logger> -->
+	</Loggers>
+	
+</Configuration>
