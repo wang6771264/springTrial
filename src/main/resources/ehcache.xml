@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+    <defaultCache eternal="false" diskPersistent="false" timeToIdleSeconds="3600" 
+        timeToLiveSeconds="3600" overflowToDisk="false" memoryStoreEvictionPolicy="LRU" />
+    <cache name="shortTerm" maxBytesLocalHeap="10m" diskPersistent="false" timeToIdleSeconds="3600" 
+            copyOnRead="true" copyOnWrite="true"  memoryStoreEvictionPolicy="LRU" />
+    <cache name="minuteTerm" maxBytesLocalHeap="10m" timeToIdleSeconds="60" timeToLiveSeconds="60" diskPersistent="false" 
+            copyOnRead="true" copyOnWrite="true"  memoryStoreEvictionPolicy="LRU"/>
+    <cache name="fiveMinuteTerm" maxBytesLocalHeap="10m" timeToIdleSeconds="300" timeToLiveSeconds="300" diskPersistent="false" 
+            copyOnRead="true" copyOnWrite="true"  memoryStoreEvictionPolicy="LRU" />
+            
+    <cache name="fifteenMinuteTerm" maxBytesLocalHeap="10m" timeToIdleSeconds="900" timeToLiveSeconds="900" diskPersistent="false" 
+    copyOnRead="true" copyOnWrite="true"  memoryStoreEvictionPolicy="LRU" />
+    
+    <cache name="hourTerm" maxBytesLocalHeap="10m" timeToLiveSeconds="3600" diskPersistent="false" 
+            copyOnRead="true" copyOnWrite="true"  memoryStoreEvictionPolicy="LRU" />
+    <cache name="dayTerm" maxBytesLocalHeap="10m" timeToIdleSeconds="86400" timeToLiveSeconds="86400" 
+            copyOnRead="true" copyOnWrite="true" diskPersistent="false"  memoryStoreEvictionPolicy="LRU" />
+    <cache name="monthTerm" maxBytesLocalHeap="30m" timeToIdleSeconds="604800" diskPersistent="false"
+            copyOnRead="true" copyOnWrite="true" timeToLiveSeconds="2592000"  memoryStoreEvictionPolicy="LRU" />
+</ehcache>

@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:c="http://www.springframework.org/schema/c"
-	xmlns:p="http://www.springframework.org/schema/p" xmlns:cache="http://www.springframework.org/schema/cache"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:cache="http://www.springframework.org/schema/cache"
+	   xmlns:c="http://www.springframework.org/schema/c"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 	http://www.springframework.org/schema/context
 	http://www.springframework.org/schema/context/spring-context-4.3.xsd
-	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
-	http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+	http://www.springframework.org/schema/cache
+	http://www.springframework.org/schema/cache/spring-cache.xsd">
 
 	<!--[redis-JedisPoolConfig配置](http://blog.csdn.net/liang_love_java/article/details/50510753) -->
 	<!-- jedis-2.7.2.jar 依赖jar包 commons-pool2-2.3.jar jedis基于 commons-pool2-2.3.jar 
@@ -143,4 +145,23 @@
 			</map>
 		</property>
 	</bean> -->
+	<!-- spring -cache 实验包 -->
+	<context:component-scan base-package="com.maple.spring_cache"/>
+	<context:annotation-config/>
+	<cache:annotation-driven/>
+
+	<bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+		<property name="caches">
+			<set>
+				<bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+					<property name="name" value="default"/>
+				</bean>
+				<bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+					<property name="name" value="accountCache"/>
+				</bean>
+			</set>
+		</property>
+	</bean>
+	<bean id="redisCacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
+	</bean>
 </beans>
